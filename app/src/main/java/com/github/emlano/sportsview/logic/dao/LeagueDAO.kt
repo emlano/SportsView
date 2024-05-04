@@ -24,4 +24,7 @@ interface LeagueDAO {
 
     @Delete
     suspend fun deleteLeague(league: League): Int
+
+    @Query("DELETE FROM League WHERE id = :id")
+    suspend fun deleteLeagueById(id: Int)
 }
