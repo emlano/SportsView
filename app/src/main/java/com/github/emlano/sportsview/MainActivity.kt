@@ -1,5 +1,6 @@
 package com.github.emlano.sportsview
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -15,8 +16,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -24,7 +27,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.github.emlano.sportsview.logic.SportsDatabase
+import com.github.emlano.sportsview.logic.api.fetchAndStoreLeagues
+import com.github.emlano.sportsview.logic.parseJsonLeagues
 import com.github.emlano.sportsview.ui.theme.SportsViewTheme
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,7 +43,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    HomeMenu(modifier = Modifier);
+                    HomeMenu(modifier = Modifier, this);
                 }
             }
         }
@@ -45,7 +52,9 @@ class MainActivity : ComponentActivity() {
 
 
 @Composable
-fun HomeMenu(modifier: Modifier = Modifier) {
+fun HomeMenu(modifier: Modifier = Modifier, context: Context) {
+    val scope = rememberCoroutineScope()
+
     Column(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -62,7 +71,17 @@ fun HomeMenu(modifier: Modifier = Modifier) {
         )
         Spacer(modifier = modifier.padding(26.dp))
         Button(
-            onClick = { /*TODO*/ }
+            onClick = {
+                scope.launch {
+                    val json = fetchAndStoreLeagues()
+                    val leagues = parseJsonLeagues(json)
+                    val leagueDAO = SportsDatabase.getInstance(context).leagueDao()
+
+                    for (i in leagues) {
+                        leagueDAO.addLeague(i)
+                    }
+                }
+            }
         ) {
             Text(text = stringResource(id = R.string.add_to_db))
         }
