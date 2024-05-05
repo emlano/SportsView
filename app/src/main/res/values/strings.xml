@@ -6,4 +6,7 @@
     <string name="title_activity_add_to_dbactivity">AddToDBActivity</string>
     <string name="title_activity_search_club_by_league">SearchClubByLeagueActivity</string>
     <string name="title_activity_search_clubs">SearchClubsActivity</string>
+    <string name="retrieve_clubs">Retrieve Clubs</string>
+    <string name="store_clubs">Save clubs to Database</string>
+    <string name="enter_league_name">Enter league name</string>
 </resources>

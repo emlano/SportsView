@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -101,6 +103,17 @@ fun HomeMenu(modifier: Modifier = Modifier, context: Context) {
             context.startActivity(intent)
         }) {
             Text(text = stringResource(id = R.string.search_clubs))
+        }
+        Snackbar(
+            containerColor = MaterialTheme.colorScheme.primary
+        ) {
+            Row(
+                modifier = Modifier.fillMaxSize(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Text(text = "Hello World")
+            }
         }
     }
 }
