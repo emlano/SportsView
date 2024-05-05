@@ -26,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -37,7 +38,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.github.emlano.sportsview.logic.api.fetchTeamsFromLeague
+import com.github.emlano.sportsview.logic.parseJsonToOutputString
 import com.github.emlano.sportsview.ui.theme.SportsViewTheme
+import kotlinx.coroutines.launch
 
 class SearchClubByLeagueActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,7 +60,9 @@ class SearchClubByLeagueActivity : ComponentActivity() {
 @Composable
 fun SearchClubsByLeagueScreen(context: Context, modifier: Modifier = Modifier) {
     var searchStr by rememberSaveable { mutableStateOf("") }
-    val retrievedStr by rememberSaveable { mutableStateOf("No data") }
+    var retrievedStr by rememberSaveable { mutableStateOf("No data") }
+    var fetchedTeams by rememberSaveable { mutableStateOf("") }
+    val scope = rememberCoroutineScope()
 
     Column(
         modifier = modifier.fillMaxSize(),
@@ -78,7 +84,12 @@ fun SearchClubsByLeagueScreen(context: Context, modifier: Modifier = Modifier) {
             label = { Text(text = stringResource(id = R.string.enter_league_name)) }
         )
         Spacer(modifier = Modifier.padding(15.dp))
-        Button(onClick = { /*TODO*/ }) {
+        Button(onClick = {
+            scope.launch {
+                fetchedTeams = fetchTeamsFromLeague(searchStr)
+                retrievedStr = parseJsonToOutputString(fetchedTeams)
+            }
+        }) {
             Text(text = stringResource(id = R.string.retrieve_clubs))
         }
         Button(onClick = { /*TODO*/ }) {

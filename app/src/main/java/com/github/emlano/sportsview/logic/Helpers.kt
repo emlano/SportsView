@@ -23,3 +23,40 @@ fun parseJsonLeagues(json: String): List<League> {
 
     return leagueList.filter { it.sport == "Soccer" }.toList()
 }
+
+fun parseAndGetReleventFields(root: JSONObject): String {
+    if (root.getString("teams") == "null") return "No clubs of such league!"
+    val jsonArray = root.getJSONArray("teams")
+    val outputJSONArray = JSONArray()
+    val fieldList = listOf(
+        "idTeam", "strTeam", "strTeamShort", "strAlternate", "intFormedYear",
+        "strLeague", "idLeague", "strStadium", "strKeywords", "strStadiumThumb",
+        "strStadiumLocation", "intStadiumCapacity", "strWebsite", "strTeamJersey", "strTeamLogo"
+    )
+
+    for (i in 0..<jsonArray.length()) {
+        val jsonObj = JSONObject()
+        val indexObj = jsonArray.get(i) as JSONObject
+
+        for (j in fieldList) {
+            jsonObj.put(j, indexObj.getString(j))
+        }
+
+        outputJSONArray.put(jsonObj)
+    }
+
+    return outputJSONArray.toString(2)
+}
+
+fun parseJsonToOutputString(jsonStr: String): String {
+    val jsonArr = JSONArray(jsonStr)
+
+    val sb = StringBuilder()
+    for (i in 0..<jsonArr.length()) {
+        val j = jsonArr.get(i) as JSONObject
+        sb.append(j.toString(2))
+        sb.append("\n")
+    }
+
+    return sb.toString().replace("""[\{\}]""".toRegex(), "")
+}
