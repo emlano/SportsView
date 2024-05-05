@@ -4,4 +4,6 @@
     <string name="search_clubs_by_league">Search for Clubs By League</string>
     <string name="search_clubs">Search for Clubs</string>
     <string name="title_activity_add_to_dbactivity">AddToDBActivity</string>
+    <string name="title_activity_search_club_by_league">SearchClubByLeagueActivity</string>
+    <string name="title_activity_search_clubs">SearchClubsActivity</string>
 </resources>

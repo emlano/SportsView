@@ -1,6 +1,7 @@
 package com.github.emlano.sportsview
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -24,6 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -66,6 +68,7 @@ fun HomeMenu(modifier: Modifier = Modifier, context: Context) {
             style = TextStyle(
                 fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
+                textDecoration = TextDecoration.Underline,
                 color = MaterialTheme.colorScheme.primary
             )
         )
@@ -86,11 +89,17 @@ fun HomeMenu(modifier: Modifier = Modifier, context: Context) {
             Text(text = stringResource(id = R.string.add_to_db))
         }
         Spacer(modifier = modifier.padding(bottom = 18.dp))
-        Button(onClick = { /*TODO*/ }) {
+        Button(onClick = {
+            val intent = Intent(context, SearchClubByLeagueActivity::class.java)
+            context.startActivity(intent)
+        }) {
             Text(text = stringResource(id = R.string.search_clubs_by_league))
         }
         Spacer(modifier = modifier.padding(bottom = 18.dp))
-        Button(onClick = { /*TODO*/ }) {
+        Button(onClick = {
+            val intent = Intent(context, SearchClubsActivity::class.java)
+            context.startActivity(intent)
+        }) {
             Text(text = stringResource(id = R.string.search_clubs))
         }
     }
