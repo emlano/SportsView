@@ -7,28 +7,27 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Snackbar
-import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.github.emlano.sportsview.logic.SportsDatabase
@@ -47,7 +46,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    HomeMenu(modifier = Modifier, this);
+                    HomeMenu(modifier = Modifier, this)
                 }
             }
         }
@@ -58,6 +57,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun HomeMenu(modifier: Modifier = Modifier, context: Context) {
     val scope = rememberCoroutineScope()
+    var showDialog by rememberSaveable { mutableStateOf(false) }
 
     Column(
         modifier = modifier.fillMaxSize(),
@@ -85,6 +85,8 @@ fun HomeMenu(modifier: Modifier = Modifier, context: Context) {
                     for (i in leagues) {
                         leagueDAO.addLeague(i)
                     }
+
+                    showDialog = !showDialog
                 }
             }
         ) {
@@ -104,16 +106,17 @@ fun HomeMenu(modifier: Modifier = Modifier, context: Context) {
         }) {
             Text(text = stringResource(id = R.string.search_clubs))
         }
-        Snackbar(
-            containerColor = MaterialTheme.colorScheme.primary
-        ) {
-            Row(
-                modifier = Modifier.fillMaxSize(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Text(text = "Hello World")
-            }
+
+        if (showDialog) {
+            AlertDialog(
+                onDismissRequest = { showDialog = !showDialog },
+                confirmButton = {
+                    Button(onClick = { showDialog = !showDialog }) {
+                        Text(text = stringResource(id = R.string.ok))
+                } },
+                title = { Text(text = stringResource(id = R.string.alert_header)) },
+                text = { Text(text = stringResource(id = R.string.alert_desc)) }
+            )
         }
     }
 }
