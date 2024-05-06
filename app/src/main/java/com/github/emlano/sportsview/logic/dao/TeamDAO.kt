@@ -13,6 +13,9 @@ interface TeamDAO {
     @Query("SELECT * FROM Team")
     suspend fun getAllTeams(): List<Team>
 
+    @Query("SELECT * FROM Team WHERE UPPER(name) LIKE :search OR UPPER(leagueName) LIKE :search")
+    suspend fun getTeamsSimilarTo(search: String): List<Team>
+
     @Query("SELECT * FROM Team WHERE id = :id")
     suspend fun getTeam(id: Int): Team
 

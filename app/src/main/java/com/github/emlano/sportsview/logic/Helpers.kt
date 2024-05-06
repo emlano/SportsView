@@ -1,9 +1,15 @@
 package com.github.emlano.sportsview.logic
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
 import com.github.emlano.sportsview.logic.entity.League
 import com.github.emlano.sportsview.logic.entity.Team
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.BufferedInputStream
+import java.net.URL
 
 fun parseJsonLeagues(json: String): List<League> {
     val jsonRoot = JSONObject(json)
@@ -92,4 +98,24 @@ fun parseJsonTeams(json: String): List<Team> {
     }
 
     return teamList
+}
+
+data object ImgList {
+    private val imgList = mutableMapOf<Int, ImageBitmap>()
+
+    fun addImage(key: Int, image: ImageBitmap) {
+        imgList[key] = image
+    }
+
+    fun getImage(index: Int): ImageBitmap {
+        return imgList[index]!!
+    }
+
+    fun hasImage(index: Int): Boolean {
+        return imgList.containsKey(index)
+    }
+
+    fun destroySelf() {
+        imgList.clear()
+    }
 }
