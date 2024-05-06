@@ -78,7 +78,7 @@ fun SearchClubsByLeagueScreen(context: Context, modifier: Modifier = Modifier) {
             text = stringResource(id = R.string.search_clubs_by_league),
             color = MaterialTheme.colorScheme.primary,
             style = TextStyle(
-                fontSize = 24.sp,
+                fontSize = 28.sp,
                 fontWeight = FontWeight.Bold
             )
         )

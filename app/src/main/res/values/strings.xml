@@ -14,4 +14,6 @@
     <string name="search_club_alert_header">Stored Teams!</string>
     <string name="search_clubs_alert_desc">Team information stored in the database.</string>
     <string name="ok">OK</string>
+    <string name="search">Search</string>
+    <string name="enter_team_or_league">Enter team or league name</string>
 </resources>
