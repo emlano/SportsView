@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -38,7 +39,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.github.emlano.sportsview.logic.SportsDatabase
 import com.github.emlano.sportsview.logic.api.fetchTeamsFromLeague
+import com.github.emlano.sportsview.logic.parseJsonTeams
 import com.github.emlano.sportsview.logic.parseJsonToOutputString
 import com.github.emlano.sportsview.ui.theme.SportsViewTheme
 import kotlinx.coroutines.launch
@@ -60,8 +63,9 @@ class SearchClubByLeagueActivity : ComponentActivity() {
 @Composable
 fun SearchClubsByLeagueScreen(context: Context, modifier: Modifier = Modifier) {
     var searchStr by rememberSaveable { mutableStateOf("") }
-    var retrievedStr by rememberSaveable { mutableStateOf("No data") }
+    var outputStr by rememberSaveable { mutableStateOf("No data") }
     var fetchedTeams by rememberSaveable { mutableStateOf("") }
+    var showDialog by rememberSaveable { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
 
     Column(
@@ -87,12 +91,25 @@ fun SearchClubsByLeagueScreen(context: Context, modifier: Modifier = Modifier) {
         Button(onClick = {
             scope.launch {
                 fetchedTeams = fetchTeamsFromLeague(searchStr)
-                retrievedStr = parseJsonToOutputString(fetchedTeams)
+                outputStr = parseJsonToOutputString(fetchedTeams)
             }
         }) {
             Text(text = stringResource(id = R.string.retrieve_clubs))
         }
-        Button(onClick = { /*TODO*/ }) {
+        Button(onClick = {
+            val teamList = parseJsonTeams(fetchedTeams)
+            if (teamList.isEmpty()) return@Button
+
+            scope.launch {
+                val teamDao = SportsDatabase.getInstance(context).teamDao()
+
+                for (i in teamList) {
+                    teamDao.addTeam(i)
+                }
+
+                showDialog = !showDialog
+            }
+        }) {
             Text(text = stringResource(id = R.string.store_clubs))
         }
         Box(
@@ -110,10 +127,21 @@ fun SearchClubsByLeagueScreen(context: Context, modifier: Modifier = Modifier) {
                 item {
                     Text(
                         modifier = modifier.padding(5.dp),
-                        text = retrievedStr
+                        text = outputStr
                     )
                 }
             }
+        }
+        if (showDialog) {
+            AlertDialog(
+                onDismissRequest = { showDialog = !showDialog },
+                confirmButton = {
+                    Button(onClick = { showDialog = !showDialog }) {
+                        Text(text = stringResource(id = R.string.ok))
+                    } },
+                title = { Text(text = stringResource(id = R.string.search_club_alert_header)) },
+                text = { Text(text = stringResource(id = R.string.search_clubs_alert_desc)) }
+            )
         }
     }
 }

@@ -9,7 +9,9 @@
     <string name="retrieve_clubs">Retrieve Clubs</string>
     <string name="store_clubs">Save clubs to Database</string>
     <string name="enter_league_name">Enter league name</string>
-    <string name="alert_header">Received Leagues!</string>
-    <string name="alert_desc">Information about leagues is stored in the database.</string>
+    <string name="search_league_alert_header">Received Leagues!</string>
+    <string name="search_league_alert_desc">League information stored in the database.</string>
+    <string name="search_club_alert_header">Stored Teams!</string>
+    <string name="search_clubs_alert_desc">Team information stored in the database.</string>
     <string name="ok">OK</string>
 </resources>

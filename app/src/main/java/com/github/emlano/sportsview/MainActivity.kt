@@ -114,8 +114,8 @@ fun HomeMenu(modifier: Modifier = Modifier, context: Context) {
                     Button(onClick = { showDialog = !showDialog }) {
                         Text(text = stringResource(id = R.string.ok))
                 } },
-                title = { Text(text = stringResource(id = R.string.alert_header)) },
-                text = { Text(text = stringResource(id = R.string.alert_desc)) }
+                title = { Text(text = stringResource(id = R.string.search_league_alert_header)) },
+                text = { Text(text = stringResource(id = R.string.search_league_alert_desc)) }
             )
         }
     }

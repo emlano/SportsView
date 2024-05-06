@@ -1,6 +1,7 @@
 package com.github.emlano.sportsview.logic
 
 import com.github.emlano.sportsview.logic.entity.League
+import com.github.emlano.sportsview.logic.entity.Team
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -25,7 +26,7 @@ fun parseJsonLeagues(json: String): List<League> {
 }
 
 fun parseAndGetReleventFields(root: JSONObject): String {
-    if (root.getString("teams") == "null") return "No clubs of such league!"
+    if (root.getString("teams") == "null") return "null"
     val jsonArray = root.getJSONArray("teams")
     val outputJSONArray = JSONArray()
     val fieldList = listOf(
@@ -49,6 +50,7 @@ fun parseAndGetReleventFields(root: JSONObject): String {
 }
 
 fun parseJsonToOutputString(jsonStr: String): String {
+    if (jsonStr == "null") return "No clubs returned of such league!"
     val jsonArr = JSONArray(jsonStr)
 
     val sb = StringBuilder()
@@ -59,4 +61,35 @@ fun parseJsonToOutputString(jsonStr: String): String {
     }
 
     return sb.toString().replace("""[\{\}]""".toRegex(), "")
+}
+
+fun parseJsonTeams(json: String): List<Team> {
+    if (json == "null" || json.isEmpty()) return emptyList()
+    val jsonArr = JSONArray(json)
+    val teamList = mutableListOf<Team>()
+
+    for (i in 0..<jsonArr.length()) {
+        val jsonObj = jsonArr.get(i) as JSONObject
+        val team = Team(
+            id = jsonObj.getInt("idTeam"),
+            name = jsonObj.getString("strTeam"),
+            shortName = jsonObj.getString("strTeamShort"),
+            altName = jsonObj.getString("strAlternate"),
+            formedYear = jsonObj.getInt("intFormedYear"),
+            leagueId = jsonObj.getInt("idLeague"),
+            leagueName = jsonObj.getString("strLeague"),
+            stadiumCapacity = jsonObj.getInt("intStadiumCapacity"),
+            stadiumLocation = jsonObj.getString("strStadiumLocation"),
+            stadiumName = jsonObj.getString("strStadium"),
+            stadiumThumb = jsonObj.getString("strStadiumThumb"),
+            stringKeywords = jsonObj.getString("strKeywords"),
+            teamJersey = jsonObj.getString("strTeamJersey"),
+            teamLogo = jsonObj.getString("strTeamLogo"),
+            website = jsonObj.getString("strWebsite")
+        )
+
+        teamList.add(team)
+    }
+
+    return teamList
 }
