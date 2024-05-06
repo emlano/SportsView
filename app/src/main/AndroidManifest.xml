@@ -15,6 +15,11 @@
         android:theme="@style/Theme.SportsView"
         tools:targetApi="31">
         <activity
+            android:name=".GetTeamJerseyActivity"
+            android:exported="false"
+            android:label="@string/title_activity_get_team_jersey"
+            android:theme="@style/Theme.SportsView" />
+        <activity
             android:name=".SearchClubsActivity"
             android:exported="false"
             android:label="@string/title_activity_search_clubs"

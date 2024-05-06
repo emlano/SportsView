@@ -65,7 +65,7 @@ fun HomeMenu(modifier: Modifier = Modifier, context: Context) {
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
-            text = "Sports Viewer",
+            text = stringResource(id = R.string.title),
             textAlign = TextAlign.Center,
             style = TextStyle(
                 fontSize = 28.sp,
@@ -77,6 +77,7 @@ fun HomeMenu(modifier: Modifier = Modifier, context: Context) {
         Spacer(modifier = modifier.padding(26.dp))
         Button(
             onClick = {
+                // Gets leagues from the API and stores them in the database
                 scope.launch {
                     val json = fetchAndStoreLeagues()
                     val leagues = parseJsonLeagues(json)
@@ -106,7 +107,15 @@ fun HomeMenu(modifier: Modifier = Modifier, context: Context) {
         }) {
             Text(text = stringResource(id = R.string.search_clubs))
         }
+        Spacer(modifier = modifier.padding(bottom = 18.dp))
+        Button(onClick = {
+            val intent = Intent(context, GetTeamJerseyActivity::class.java)
+            context.startActivity(intent)
+        }) {
+            Text(text = stringResource(id = R.string.get_team_jersey))
+        }
 
+        // To show user an alert once the Database has been updated with the fetched JSON
         if (showDialog) {
             AlertDialog(
                 onDismissRequest = { showDialog = !showDialog },

@@ -95,13 +95,18 @@ fun SearchClubsByLeagueScreen(context: Context, modifier: Modifier = Modifier) {
         Spacer(modifier = Modifier.padding(15.dp))
         Button(onClick = {
             scope.launch {
+                // Fetches teams from the API and holds it in fetchedTeams String
                 fetchedTeams = fetchTeamsFromLeague(searchStr)
+                // outputStr is separate since it is the display string which needs to be
+                // formatted.
                 outputStr = parseJsonToOutputString(fetchedTeams)
             }
         }) {
             Text(text = stringResource(id = R.string.retrieve_clubs))
         }
         Button(onClick = {
+            // The fetchedTeams which contains the unedited JSON is then used to create Team objs
+            // and stored in the DB
             val teamList = parseJsonTeams(fetchedTeams)
             if (teamList.isEmpty()) return@Button
 
@@ -137,6 +142,8 @@ fun SearchClubsByLeagueScreen(context: Context, modifier: Modifier = Modifier) {
                 }
             }
         }
+
+        // Shows an alert when the database is updated
         if (showDialog) {
             AlertDialog(
                 onDismissRequest = { showDialog = !showDialog },

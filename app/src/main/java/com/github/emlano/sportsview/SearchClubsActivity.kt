@@ -50,7 +50,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.github.emlano.sportsview.logic.ImgList
 import com.github.emlano.sportsview.logic.SportsDatabase
 import com.github.emlano.sportsview.logic.api.fetchImgFromUrl
 import com.github.emlano.sportsview.logic.entity.Team
@@ -105,10 +104,10 @@ fun SearchClubsScreen(modifier: Modifier = Modifier, context: Context) {
         )
         Spacer(modifier = Modifier.padding(18.dp))
         Button(onClick = {
-            ImgList.destroySelf()
             if (searchStr.isEmpty()) return@Button
 
             scope.launch {
+                // This fetches the teams from the database and displays their names, league names and logos
                 val teamDao = SportsDatabase.getInstance(context).teamDao()
                 teamList = teamDao.getTeamsSimilarTo("%${searchStr.uppercase()}%")
             }
@@ -136,21 +135,26 @@ fun SearchClubsScreen(modifier: Modifier = Modifier, context: Context) {
                     items(teamList.size) {
                         val team = teamList[it]
 
-                        Row(
+                        Column(
                             modifier = modifier
                                 .fillMaxWidth()
-                                .height(125.dp)
                                 .border(
                                     width = 2.dp,
                                     color = MaterialTheme.colorScheme.primary,
                                     shape = RoundedCornerShape(15.dp)
                                 ),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceAround
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             AsyncImage(modifier = modifier, url = team.teamLogo, contentDesc = "${team.name} logo", key = it)
                             Text(
                                 text = team.name,
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                            Text(
+                                text = team.leagueName,
                                 fontSize = 20.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.primary
@@ -163,6 +167,8 @@ fun SearchClubsScreen(modifier: Modifier = Modifier, context: Context) {
     }
 }
 
+// Used this cause, Bitmap images cannot be fetched on the main thread.
+// And the used thread must not block the main thread
 @Composable
 fun AsyncImage(modifier: Modifier, url: String, contentDesc: String, key: Int) {
     var bitmapState by remember { mutableStateOf<ImageBitmap?>(null) }
@@ -174,18 +180,13 @@ fun AsyncImage(modifier: Modifier, url: String, contentDesc: String, key: Int) {
         }
     }
 
-    if (ImgList.hasImage(key)) {
-        Image(
-            modifier = modifier.padding(5.dp),
-            bitmap = ImgList.getImage(key),
-            contentDescription = contentDesc
-        )
-    } else if (bitmapState == null) {
+    if (bitmapState == null) {
         Icon(imageVector = Icons.Outlined.Refresh, contentDescription = "loading")
     } else {
-        ImgList.addImage(key, bitmapState!!)
         Image(
             modifier = modifier
+                .width(175.dp)
+                .height(75.dp)
                 .padding(5.dp),
 
             bitmap = bitmapState!!,

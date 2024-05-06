@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">SportsView</string>
+    <string name="title">Sports Viewer</string>
     <string name="add_to_db">Add Leagues to DB</string>
     <string name="search_clubs_by_league">Search for Clubs By League</string>
     <string name="search_clubs">Search for Clubs</string>
@@ -16,4 +17,7 @@
     <string name="ok">OK</string>
     <string name="search">Search</string>
     <string name="enter_team_or_league">Enter team or league name</string>
+    <string name="title_activity_get_team_jersey">GetTeamJerseyActivity</string>
+    <string name="get_team_jersey">Get all Team Jerseys</string>
+    <string name="enter_team_name">Enter a team name</string>
 </resources>

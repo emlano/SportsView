@@ -4,6 +4,8 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
+import com.github.emlano.sportsview.logic.api.fetchAndStoreLeagues
+import com.github.emlano.sportsview.logic.api.fetchTeamsFromLeague
 import com.github.emlano.sportsview.logic.entity.League
 import com.github.emlano.sportsview.logic.entity.Team
 import org.json.JSONArray
@@ -31,6 +33,7 @@ fun parseJsonLeagues(json: String): List<League> {
     return leagueList.filter { it.sport == "Soccer" }.toList()
 }
 
+// To extract the relevant fields for teams from the json returned from the API
 fun parseAndGetReleventFields(root: JSONObject): String {
     if (root.getString("teams") == "null") return "null"
     val jsonArray = root.getJSONArray("teams")
@@ -55,6 +58,7 @@ fun parseAndGetReleventFields(root: JSONObject): String {
     return outputJSONArray.toString(2)
 }
 
+// To format a display-able String to be shown at the Search Clubs from Leagues page
 fun parseJsonToOutputString(jsonStr: String): String {
     if (jsonStr == "null") return "No clubs returned of such league!"
     val jsonArr = JSONArray(jsonStr)
@@ -69,6 +73,7 @@ fun parseJsonToOutputString(jsonStr: String): String {
     return sb.toString().replace("""[\{\}]""".toRegex(), "")
 }
 
+// To create Team objects from the received JSON
 fun parseJsonTeams(json: String): List<Team> {
     if (json == "null" || json.isEmpty()) return emptyList()
     val jsonArr = JSONArray(json)
@@ -100,22 +105,19 @@ fun parseJsonTeams(json: String): List<Team> {
     return teamList
 }
 
-data object ImgList {
-    private val imgList = mutableMapOf<Int, ImageBitmap>()
+// Created to get all teams in the SportsDB
+// !! Does Not Work and Unused !!
+suspend fun getAllTeams(): List<Team> {
+    val teamList = mutableListOf<Team>()
 
-    fun addImage(key: Int, image: ImageBitmap) {
-        imgList[key] = image
+    val leagues = JSONObject(fetchAndStoreLeagues()).getJSONArray("leagues")
+
+    for (i in 0..<leagues.length()) {
+        val league = leagues[i] as JSONObject
+        val teams = fetchTeamsFromLeague(league.getString("strLeague"))
+
+        teamList.addAll(parseJsonTeams(teams))
     }
 
-    fun getImage(index: Int): ImageBitmap {
-        return imgList[index]!!
-    }
-
-    fun hasImage(index: Int): Boolean {
-        return imgList.containsKey(index)
-    }
-
-    fun destroySelf() {
-        imgList.clear()
-    }
+    return teamList
 }
