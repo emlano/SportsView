@@ -2,22 +2,15 @@ package com.github.emlano.sportsview.logic.api
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.Picture
-import android.provider.MediaStore.Images
-import androidx.compose.foundation.Image
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Warning
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import com.github.emlano.sportsview.logic.parseAndGetReleventFields
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.json.JSONArray
 import org.json.JSONObject
 import java.io.BufferedInputStream
 import java.io.BufferedReader
 import java.io.InputStreamReader
-import java.net.HttpURLConnection
 import java.net.URL
 
 suspend fun fetchAndStoreLeagues(): String {

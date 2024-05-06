@@ -1,17 +1,11 @@
 package com.github.emlano.sportsview.logic
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.asImageBitmap
 import com.github.emlano.sportsview.logic.api.fetchAndStoreLeagues
 import com.github.emlano.sportsview.logic.api.fetchTeamsFromLeague
 import com.github.emlano.sportsview.logic.entity.League
 import com.github.emlano.sportsview.logic.entity.Team
 import org.json.JSONArray
 import org.json.JSONObject
-import java.io.BufferedInputStream
-import java.net.URL
 
 fun parseJsonLeagues(json: String): List<League> {
     val jsonRoot = JSONObject(json)
